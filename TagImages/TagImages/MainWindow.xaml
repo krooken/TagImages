@@ -3,6 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.Children>
+            <Image Grid.Row="0" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
+            <Grid Grid.Row="1" Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="A" />
+                    <ColumnDefinition SharedSizeGroup="A" />
+                    <ColumnDefinition SharedSizeGroup="A" />
+                </Grid.ColumnDefinitions>
+                <Grid.Children>
+                    <Button Grid.Column="0">Bad</Button>
+                    <Button Grid.Column="1">Acceptable</Button>
+                    <Button Grid.Column="2">Good</Button>
+                </Grid.Children>
+            </Grid>
+        </Grid.Children>
     </Grid>
 </Window>
