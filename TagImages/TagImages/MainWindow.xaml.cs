@@ -91,21 +91,7 @@ namespace TagImages
         // Calculate modulo. Negative numerator renders positive result.
         int Modulo(int numerator, int denominator)
         {
-            int mod = numerator;
-            // Numerator is negative, so increase with denominator until positive.
-            if (mod < 0 && denominator > 0)
-            {
-                while (mod < 0)
-                {
-                    mod += denominator;
-                }
-            }
-            else // Numerator is positive, use ordinary modulus.
-            {
-                mod = numerator % denominator;
-            }
-
-            return mod;
+            return (numerator % denominator + denominator) % denominator;
         }
 
         // List all files recurively from a root folder defined by path.
