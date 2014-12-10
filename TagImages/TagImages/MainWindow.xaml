@@ -35,8 +35,8 @@
                     <ColumnDefinition SharedSizeGroup="A" />
                 </Grid.ColumnDefinitions>
                 <Grid.Children>
-                    <Button Grid.Column="0">Prev</Button>
-                    <Button Grid.Column="1">Next</Button>
+                    <Button Name="btnPrev" Grid.Column="0">Prev</Button>
+                    <Button Name="btnNext" Grid.Column="1">Next</Button>
                 </Grid.Children>
             </Grid>
         </Grid.Children>

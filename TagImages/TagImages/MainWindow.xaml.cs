@@ -22,6 +22,10 @@ namespace TagImages
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private System.Collections.Generic.List<string> fileList = null;
+        private int fileListIndex = 0;
+
         public MainWindow()
         {
             // Folder to be scanned recursively for image files
@@ -52,12 +56,56 @@ namespace TagImages
             // Mask is catalog root folder plus search expression.
             string mask = scanPath + "\\*.*";
             // Acquire list of all image files.
-            System.Collections.Generic.List<string> list = GetAllFiles(mask, (info) => IsImageFile(info)).ToList();
+            fileList = GetAllFiles(mask, (info) => IsImageFile(info)).ToList();
 
             // Show first image in the list of files.
-            BitmapImage img = new BitmapImage(new Uri(list[0]));
+            BitmapImage img = new BitmapImage(new Uri(fileList[fileListIndex]));
             this.PictureFrame.Source = img;
+
+            // Add event listeners to buttons.
+            this.btnPrev.Click += btnPrev_Click;
+            this.btnNext.Click += btnNext_Click;
             
+        }
+
+        // Change image position in file list and update picture in GUI. 
+        // Position is relative the current.
+        void TraverseFileList(int deltaPosition)
+        {
+            fileListIndex = Modulo((fileListIndex + deltaPosition), fileList.Count);
+            this.PictureFrame.Source = new BitmapImage(new Uri(fileList[fileListIndex]));
+        }
+
+        // Event listener for 'Next' button.
+        void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            TraverseFileList(+1);
+        }
+
+        // Event listener for 'Previous' button.
+        void btnPrev_Click(object sender, RoutedEventArgs e)
+        {
+            TraverseFileList(-1);
+        }
+
+        // Calculate modulo. Negative numerator renders positive result.
+        int Modulo(int numerator, int denominator)
+        {
+            int mod = numerator;
+            // Numerator is negative, so increase with denominator until positive.
+            if (mod < 0 && denominator > 0)
+            {
+                while (mod < 0)
+                {
+                    mod += denominator;
+                }
+            }
+            else // Numerator is positive, use ordinary modulus.
+            {
+                mod = numerator % denominator;
+            }
+
+            return mod;
         }
 
         // List all files recurively from a root folder defined by path.
