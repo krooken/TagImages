@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.IO;
 
 namespace TagImages
 {
@@ -22,6 +24,21 @@ namespace TagImages
     {
         public MainWindow()
         {
+            string scanPath = null;
+
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.SelectedPath = Directory.GetCurrentDirectory();
+            DialogResult result = dialog.ShowDialog();
+            
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                scanPath = dialog.SelectedPath;
+            } 
+            else
+            {
+                Environment.Exit(1);
+            }
+
             InitializeComponent();
         }
     }
