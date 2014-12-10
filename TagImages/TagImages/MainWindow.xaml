@@ -8,17 +8,35 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.Children>
-            <Image Grid.Row="0" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Children>
+                    <Image Grid.Column="0" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
+                    <Grid Grid.Column="1" VerticalAlignment="Center" Grid.IsSharedSizeScope="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition SharedSizeGroup="A" />
+                            <RowDefinition SharedSizeGroup="A" />
+                            <RowDefinition SharedSizeGroup="A" />
+                        </Grid.RowDefinitions>
+                        <Grid.Children>
+                            <Button Grid.Row="0">Good</Button>
+                            <Button Grid.Row="1">Acceptable</Button>
+                            <Button Grid.Row="2">Bad</Button>
+                        </Grid.Children>
+                    </Grid>
+                </Grid.Children>
+            </Grid>
             <Grid Grid.Row="1" Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="A" />
                     <ColumnDefinition SharedSizeGroup="A" />
-                    <ColumnDefinition SharedSizeGroup="A" />
                 </Grid.ColumnDefinitions>
                 <Grid.Children>
-                    <Button Grid.Column="0">Bad</Button>
-                    <Button Grid.Column="1">Acceptable</Button>
-                    <Button Grid.Column="2">Good</Button>
+                    <Button Grid.Column="0">Prev</Button>
+                    <Button Grid.Column="1">Next</Button>
                 </Grid.Children>
             </Grid>
         </Grid.Children>
