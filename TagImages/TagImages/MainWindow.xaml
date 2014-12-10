@@ -14,7 +14,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Children>
-                    <Image Grid.Column="0" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
+                    <Image Name="PictureFrame" Grid.Column="0" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
                     <Grid Grid.Column="1" VerticalAlignment="Center" Grid.IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
                             <RowDefinition SharedSizeGroup="A" />
