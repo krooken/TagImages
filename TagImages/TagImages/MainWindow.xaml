@@ -22,9 +22,9 @@
                             <RowDefinition SharedSizeGroup="A" />
                         </Grid.RowDefinitions>
                         <Grid.Children>
-                            <Button Grid.Row="0">Good</Button>
-                            <Button Grid.Row="1">Medium</Button>
-                            <Button Grid.Row="2">Bad</Button>
+                            <Button Name="btnGood" Grid.Row="0">Good</Button>
+                            <Button Name="btnMedium" Grid.Row="1">Medium</Button>
+                            <Button Name="btnBad" Grid.Row="2">Bad</Button>
                         </Grid.Children>
                     </Grid>
                 </Grid.Children>
