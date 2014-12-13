@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.IO;
+using Excel = Microsoft.Office.Interop.Excel; 
 
 namespace TagImages
 {
@@ -25,6 +26,7 @@ namespace TagImages
 
         private System.Collections.Generic.List<string> fileList = null;
         private int fileListIndex = 0;
+        private Excel.Range filenameRange, photoQualityRange;
 
         public MainWindow()
         {
@@ -48,6 +50,61 @@ namespace TagImages
             {
                 Environment.Exit(1);
             }
+
+            // Create OpenFileDialog to select excel workbook
+            Microsoft.Win32.OpenFileDialog fileDialog = new Microsoft.Win32.OpenFileDialog();
+            fileDialog.DefaultExt = ".xlsx";
+            fileDialog.Filter = "Excel documents (.xlsx)|*.xlsx";
+            Nullable<bool> fileResult = fileDialog.ShowDialog();
+            string filename = null;
+            if (fileResult == true)
+            {
+                filename = fileDialog.FileName;
+            }
+            else
+            {
+                Environment.Exit(1);
+            }
+
+            // Open excel sheet in specified workbook
+            Excel.Application excelApp = new Excel.Application();
+            Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(filename);
+            Excel.Sheets excelSheets = excelWorkbook.Worksheets;
+            string currentSheet = "ImageData";
+            Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
+            Excel.Range usedRange = (Excel.Range)excelWorksheet.UsedRange;
+            Excel.Range rows = (Excel.Range)usedRange.Rows;
+
+            Console.WriteLine(rows.AddressLocal);
+            Console.WriteLine(rows.Row);
+
+            // Find the columns in which file name and photo quality is stored
+            int filenameColumn = -1;
+            int photoQualityColumn = -1;
+            for (int i = 0; i < rows.Columns.Count; i++)
+            {
+                Console.WriteLine(rows.Cells[1, i + 1].Value2.ToString());
+                string columnHeader = rows.Cells[1, i + 1].Value2.ToString();
+                if (columnHeader.ToLower().Equals("filename"))
+                {
+                    filenameColumn = i;
+                }
+                if (columnHeader.ToLower().Equals("photo quality"))
+                {
+                    photoQualityColumn = i;
+                }
+            }
+
+            Console.WriteLine("filenameColumn = " + filenameColumn);
+            Console.WriteLine("photoQualityColumn = " + photoQualityColumn);
+
+            // Get the ranges that include the file name and photo quality
+            Console.WriteLine(usedRange.Cells[2, filenameColumn+1].Address);
+            Console.WriteLine(usedRange.Cells[usedRange.Rows.Count, filenameColumn+1].Address);
+            filenameRange = (Excel.Range)usedRange.get_Range((string)usedRange.Cells[2, filenameColumn + 1].Address, (string)usedRange.Cells[usedRange.Rows.Count, filenameColumn + 1].Address);
+            photoQualityRange = (Excel.Range)usedRange.get_Range((string)usedRange.Cells[2, photoQualityColumn + 1].Address, (string)usedRange.Cells[usedRange.Rows.Count, photoQualityColumn + 1].Address);
+            Console.WriteLine(filenameRange.Address);
+            Console.WriteLine(photoQualityRange.Address);
 
             // Bring up GUI
             InitializeComponent();
