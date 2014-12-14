@@ -27,6 +27,7 @@ namespace TagImages
         private System.Collections.Generic.List<string> fileList = null;
         private int fileListIndex = 0;
         private Excel.Range filenameRange, photoQualityRange;
+        Excel.Workbook excelWorkbook;
 
         public MainWindow()
         {
@@ -68,7 +69,7 @@ namespace TagImages
 
             // Open excel sheet in specified workbook
             Excel.Application excelApp = new Excel.Application();
-            Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(filename);
+            excelWorkbook = excelApp.Workbooks.Open(filename);
             Excel.Sheets excelSheets = excelWorkbook.Worksheets;
             string currentSheet = "ImageData";
             Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
@@ -121,7 +122,26 @@ namespace TagImages
             // Add event listeners to buttons.
             this.btnPrev.Click += btnPrev_Click;
             this.btnNext.Click += btnNext_Click;
+
+            this.btnGood.Click += btnGood_Click;
+            this.btnMedium.Click += btnMedium_Click;
+            this.btnBad.Click += btnBad_Click;
             
+        }
+
+        void btnBad_Click(object sender, RoutedEventArgs e)
+        {
+            RateCurrentPicture("Bad");
+        }
+
+        void btnMedium_Click(object sender, RoutedEventArgs e)
+        {
+            RateCurrentPicture("Medium");
+        }
+
+        void btnGood_Click(object sender, RoutedEventArgs e)
+        {
+            RateCurrentPicture("Good");
         }
 
         // Change image position in file list and update picture in GUI. 
@@ -225,6 +245,15 @@ namespace TagImages
             bool isJpeg = extension == ".jpeg" || extension == ".jpg";
             bool isTiff = extension == ".tiff" || extension == ".tif";
             return isJpeg || isTiff;
+        }
+
+        void RateCurrentPicture(string rating)
+        {
+            Excel.Range matchingCell = (Excel.Range)filenameRange.Find(System.IO.Path.GetFileName(fileList[fileListIndex]));
+            Excel.Range photoQualityMatch = (Excel.Range)photoQualityRange.Cells[matchingCell.Row - photoQualityRange.Row + 1, 1];
+            photoQualityMatch.Value2 = rating;
+            excelWorkbook.Save();
+            TraverseFileList(1);
         }
     }
 }
