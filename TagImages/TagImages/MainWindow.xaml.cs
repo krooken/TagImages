@@ -255,5 +255,11 @@ namespace TagImages
             excelWorkbook.Save();
             TraverseFileList(1);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Console.WriteLine("Window closing");
+            excelWorkbook.Close(false);
+        }
     }
 }
