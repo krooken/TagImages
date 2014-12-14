@@ -116,8 +116,7 @@ namespace TagImages
             fileList = GetAllFiles(mask, (info) => IsImageFile(info)).ToList();
 
             // Show first image in the list of files.
-            BitmapImage img = new BitmapImage(new Uri(fileList[fileListIndex]));
-            this.PictureFrame.Source = img;
+            TraverseFileList(0);
 
             // Add event listeners to buttons.
             this.btnPrev.Click += btnPrev_Click;
@@ -129,8 +128,56 @@ namespace TagImages
         // Position is relative the current.
         void TraverseFileList(int deltaPosition)
         {
-            fileListIndex = Modulo((fileListIndex + deltaPosition), fileList.Count);
+            Excel.Range matchingCell = null;
+            int loopLimit = fileList.Count;
+            int loopCount = 0;
+            while (matchingCell == null)
+            {
+                fileListIndex = Modulo((fileListIndex + deltaPosition), fileList.Count);
+                Console.WriteLine("Selected image: " + fileList[fileListIndex]);
+                matchingCell = (Excel.Range)filenameRange.Find(System.IO.Path.GetFileName(fileList[fileListIndex]));
+                if (deltaPosition < 0)
+                    deltaPosition = -1;
+                else
+                {
+                    deltaPosition = 1;
+                }
+                loopCount++;
+                if (loopCount > loopLimit)
+                {
+                    return;
+                }
+            }
             this.PictureFrame.Source = new BitmapImage(new Uri(fileList[fileListIndex]));
+            this.textFileName.Text = System.IO.Path.GetFileName(fileList[fileListIndex]);
+
+            Excel.Range photoQualityMatch = (Excel.Range)photoQualityRange.Cells[matchingCell.Row, 1];
+            string rawRating = (string)((Excel.Range)photoQualityRange.Cells[matchingCell.Row - photoQualityRange.Row + 1, 1]).Value2;
+            string rating;
+            if (rawRating == null)
+            {
+                rating = "";
+            }
+            else
+            {
+                rating = rawRating.ToLower();
+            }
+            Console.WriteLine(rating);
+            btnGood.ClearValue(System.Windows.Controls.Button.BackgroundProperty);
+            btnMedium.ClearValue(System.Windows.Controls.Button.BackgroundProperty);
+            btnBad.ClearValue(System.Windows.Controls.Button.BackgroundProperty);
+            if (rating.Equals("good"))
+            {
+                btnGood.Background = Brushes.Green;
+            }
+            else if (rating.Equals("medium"))
+            {
+                btnMedium.Background = Brushes.Yellow;
+            }
+            else if (rating.Equals("bad"))
+            {
+                btnBad.Background = Brushes.Red;
+            }
         }
 
         // Event listener for 'Next' button.
