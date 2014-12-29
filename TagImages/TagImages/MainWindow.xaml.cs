@@ -139,12 +139,21 @@ namespace TagImages
             {
                 Console.Write("KeyDown.Enter: ");
                 Console.WriteLine(textFileName.Text);
+                if (textFileName.Text.Equals(""))
+                {
+                    TraverseFileList(0);
+                    return;
+                }
                 Predicate<string> filenameFinder = (string filename) => { return CompareFilenames(filename, textFileName.Text); };
                 int filenameIndex = fileList.FindIndex(filenameFinder);
                 if (filenameIndex < 0)
                 {
                     // The file couldn't be found in the list
-                    // TODO: Notify user with dialog
+                    string messageBoxText = "The file couldn't be found. Sorry!";
+                    string caption = "Out of cheese error";
+                    MessageBoxButton button = MessageBoxButton.OK;
+                    MessageBoxImage icon = MessageBoxImage.Warning;
+                    System.Windows.MessageBox.Show(messageBoxText, caption, button, icon);
                 }
                 else
                 {
