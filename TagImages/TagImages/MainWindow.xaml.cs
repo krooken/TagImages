@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.IO;
-using Excel = Microsoft.Office.Interop.Excel; 
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace TagImages
 {
@@ -126,7 +126,43 @@ namespace TagImages
             this.btnGood.Click += btnGood_Click;
             this.btnMedium.Click += btnMedium_Click;
             this.btnBad.Click += btnBad_Click;
+
+            // Add enter press listener to file name text box
+            this.textFileName.KeyDown += textFileName_KeyDown;
             
+        }
+
+        void textFileName_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // If user presses enter, try to go to the specified file
+            if (e.Key == Key.Enter)
+            {
+                Console.Write("KeyDown.Enter: ");
+                Console.WriteLine(textFileName.Text);
+                Predicate<string> filenameFinder = (string filename) => { return CompareFilenames(filename, textFileName.Text); };
+                int filenameIndex = fileList.FindIndex(filenameFinder);
+                if (filenameIndex < 0)
+                {
+                    // The file couldn't be found in the list
+                    // TODO: Notify user with dialog
+                }
+                else
+                {
+                    int deltaPosition = filenameIndex - this.fileListIndex;
+                    Console.WriteLine("fileListIndex: " + this.fileListIndex);
+                    Console.WriteLine("filenameIndex: " + filenameIndex);
+                    Console.WriteLine("deltaPosition: " + deltaPosition);
+                    TraverseFileList(deltaPosition);
+                }
+            }
+        }
+
+        bool CompareFilenames(string filename1, string filename2)
+        {
+            string file1 = System.IO.Path.GetFileNameWithoutExtension(filename1);
+            string file2 = System.IO.Path.GetFileNameWithoutExtension(filename2);
+
+            return file1.Equals(file2);
         }
 
         void btnBad_Click(object sender, RoutedEventArgs e)
