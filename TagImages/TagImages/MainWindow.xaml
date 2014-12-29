@@ -22,10 +22,12 @@
                         </Grid.RowDefinitions>
                         <Grid.Children>
                             <Image Grid.Row="0" Name="PictureFrame" Source="Images/default_picture.jpg" VerticalAlignment="Top" ></Image>
+                            <!--
                             <TextBox Grid.Row="1" Name="textFileName" Grid.Column="3" 
                                      HorizontalAlignment="Center" Background="Transparent"
                                      BorderThickness="0"
                                      IsReadOnly="True" TextWrapping="Wrap" Text="Filename.jpg" />
+                            -->
                         </Grid.Children>
                     </Grid>
                     <Grid Grid.Column="1" VerticalAlignment="Center" Grid.IsSharedSizeScope="True">
@@ -46,10 +48,12 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="A" />
                     <ColumnDefinition SharedSizeGroup="A" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.Children>
-                    <Button Name="btnPrev" Grid.Column="0">Prev</Button>
+                    <Button Name="btnPrev" Grid.Column="0" >Prev</Button>
                     <Button Name="btnNext" Grid.Column="1">Next</Button>
+                    <TextBox Name="textFileName" Grid.Column="2" Width="360" >100-04S(048-90Wjuv)_female_060627_098_dunbar_GPE_102a.jpg</TextBox>
                 </Grid.Children>
             </Grid>
         </Grid.Children>
