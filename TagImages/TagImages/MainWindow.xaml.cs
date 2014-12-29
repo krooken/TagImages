@@ -116,8 +116,19 @@ namespace TagImages
             // Acquire list of all image files.
             fileList = GetAllFiles(mask, (info) => IsImageFile(info)).ToList();
 
-            // Show first image in the list of files.
-            TraverseFileList(0);
+            try
+            {
+                string filenameFromLastSession = System.IO.File.ReadAllText(@"LastFileViewed");
+                TraverseFileList(0);
+                GoToFile(filenameFromLastSession, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Couldn't find last file viewed!");
+                Console.WriteLine(e.Message);
+                // Show first image in the list of files.
+                TraverseFileList(0);
+            }
 
             // Add event listeners to buttons.
             this.btnPrev.Click += btnPrev_Click;
@@ -144,9 +155,17 @@ namespace TagImages
                     TraverseFileList(0);
                     return;
                 }
-                Predicate<string> filenameFinder = (string filename) => { return CompareFilenames(filename, textFileName.Text); };
-                int filenameIndex = fileList.FindIndex(filenameFinder);
-                if (filenameIndex < 0)
+                GoToFile(textFileName.Text);
+            }
+        }
+
+        private void GoToFile(string targetFilename, bool silent=false)
+        {
+            Predicate<string> filenameFinder = (string filename) => { return CompareFilenames(filename, targetFilename); };
+            int filenameIndex = fileList.FindIndex(filenameFinder);
+            if (filenameIndex < 0)
+            {
+                if (!silent)
                 {
                     // The file couldn't be found in the list
                     string messageBoxText = "The file couldn't be found. Sorry!";
@@ -155,14 +174,14 @@ namespace TagImages
                     MessageBoxImage icon = MessageBoxImage.Warning;
                     System.Windows.MessageBox.Show(messageBoxText, caption, button, icon);
                 }
-                else
-                {
-                    int deltaPosition = filenameIndex - this.fileListIndex;
-                    Console.WriteLine("fileListIndex: " + this.fileListIndex);
-                    Console.WriteLine("filenameIndex: " + filenameIndex);
-                    Console.WriteLine("deltaPosition: " + deltaPosition);
-                    TraverseFileList(deltaPosition);
-                }
+            }
+            else
+            {
+                int deltaPosition = filenameIndex - this.fileListIndex;
+                Console.WriteLine("fileListIndex: " + this.fileListIndex);
+                Console.WriteLine("filenameIndex: " + filenameIndex);
+                Console.WriteLine("deltaPosition: " + deltaPosition);
+                TraverseFileList(deltaPosition);
             }
         }
 
@@ -305,6 +324,14 @@ namespace TagImages
         {
             Console.WriteLine("Window closing");
             excelWorkbook.Close(false);
+            try
+            {
+                System.IO.File.WriteAllText(@"LastFileViewed", this.textFileName.Text);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
