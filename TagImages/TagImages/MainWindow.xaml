@@ -35,11 +35,13 @@
                             <RowDefinition SharedSizeGroup="A" />
                             <RowDefinition SharedSizeGroup="A" />
                             <RowDefinition SharedSizeGroup="A" />
+                            <RowDefinition SharedSizeGroup="A" />
                         </Grid.RowDefinitions>
                         <Grid.Children>
                             <Button Name="btnGood" Grid.Row="0">Good</Button>
                             <Button Name="btnMedium" Grid.Row="1">Medium</Button>
                             <Button Name="btnBad" Grid.Row="2">Bad</Button>
+                            <TextBlock Grid.Row="3" TextAlignment="Center" FontFamily="Simplified Arabic Fixed" Margin="0,7,0,0" >1.0.0</TextBlock>
                         </Grid.Children>
                     </Grid>
                 </Grid.Children>
